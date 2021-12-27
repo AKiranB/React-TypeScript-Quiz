@@ -5,6 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "./app.css";
 import { ChakraProvider } from "@chakra-ui/react";
+import { ColorModeScript } from '@chakra-ui/react'
 
 ReactDOM.render(
   <React.StrictMode>
