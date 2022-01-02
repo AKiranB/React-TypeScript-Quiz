@@ -1,6 +1,5 @@
 import { Button } from "@chakra-ui/react";
 import React from "react";
-import AnswerObject from "../App";
 
 type Props = {
   question: string;
@@ -24,19 +23,24 @@ const QuestionCard: React.FC<Props> = ({
   return (
     <div>
       Question: {questionNumber} / {totalQuestions}
-      <p dangerouslySetInnerHTML={{ __html: question }}></p>
       <div>
-        {answer.map((answer) => (
-          <div>
-            <Button
-              colorScheme={isCorrect}
-              disabled={userAnswer}
-              value={answer}
-              onClick={callback}
-            >
-              {answer}
-            </Button>
-          </div>
+        {question}
+      </div>
+      <div>
+        {answer.map((answer, i) => (
+          <Button
+            key={i}
+            m={'10px'}
+            width={['sm', 'md', 'lg', 'xl']}
+            fontSize={['sm', 'md', 'lg', 'xl']}
+            colorScheme={isCorrect}
+            disabled={userAnswer}
+            value={answer}
+            onClick={callback}
+          >
+            {answer}
+          </Button>
+
         ))}
       </div>
     </div>

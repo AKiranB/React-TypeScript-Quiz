@@ -1,4 +1,4 @@
-import { shuffleArray } from "./components/utils";
+import { shuffleArray } from "./components/utility/shuffleArray";
 export type Question = {
 
     category: string;
@@ -11,11 +11,12 @@ export type Question = {
 export type QuestionState = Question & { answers: string[] };
 
 
-export const fetchQuestions = async (amount: number, difficulty: string, category: string | undefined) => {
+export const fetchQuestions = async (amount: number, difficulty: string, category: string) => {
 
     const APIendpoint = `https://opentdb.com/api.php?amount=${amount}&category=${category}&difficulty=${difficulty}&type=multiple`;
-
     const data = await (await fetch(APIendpoint)).json();
+
+    console.log(data)
 
     return data.results.map((question: Question) => (
         {

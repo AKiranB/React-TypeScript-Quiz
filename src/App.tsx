@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { useState } from "react";
 import { fetchQuestions } from "./API";
 import QuestionCard from "./components/QuestionCard";
@@ -9,12 +9,12 @@ import {
   Box,
   Grid,
   Button,
-  Radio,
-  RadioGroup,
-  Stack,
   Center,
+  Image
 } from "@chakra-ui/react";
 import { ColorModeSwitcher } from "./ColorModeSwitcher";
+import logo from './images/quiz.png'
+import OptionsCard from "./components/OptionsCard";
 
 type AnswerObject = {
   question: string;
@@ -28,15 +28,13 @@ const TOTAL_QUESTIONS = 10;
 function App() {
   const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState<QuestionState[]>([]);
+  const [score, setScore] = useState(0);
   const [number, setNumber] = useState(0);
   const [userAnswers, setUserAnswers] = useState<AnswerObject[]>([]);
-  const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(true);
   const [isCorrect, setIsCorrect] = useState<string>("blue");
-  const [difficulty, setDifficulty] = useState('')
-  const [category, setCategory] = useState<string | undefined>('')
-
-
+  const [difficulty, setDifficulty] = useState<string>('')
+  const [category, setCategory] = useState<string>('')
 
 
   const startTrivia = async () => {
@@ -44,6 +42,8 @@ function App() {
     setGameOver(false);
 
     const newQuestions = await fetchQuestions(TOTAL_QUESTIONS, difficulty, category);
+
+    console.log(await fetchQuestions(TOTAL_QUESTIONS, difficulty, category))
 
     setQuestions(newQuestions);
     setScore(0);
@@ -82,41 +82,28 @@ function App() {
     }
   };
 
+  const handleDropdownChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setCategory(e.target.value)
+  }
+
   return (
     <>
       <ChakraProvider theme={theme}>
         <Box textAlign="center" fontSize="xl">
-          <Grid minH="100vh" p={3}>
+          <Grid dir="column" minH="100vh">
             <ColorModeSwitcher justifySelf="flex-end" />
+            <Center>
+              <Image src={logo} />
+            </Center>
             <div className="App">
-
-              <h1>React Quiz</h1>
               {gameOver || userAnswers.length === TOTAL_QUESTIONS ? (
                 <>
-                  <Center>
-                    Select Difficulty
-                    <RadioGroup onChange={event => setDifficulty(event)}>
-                      <Stack direction='row'>
-                        <Radio value='easy'>Easy</Radio>
-                        <Radio value='medium'>Medium</Radio>
-                        <Radio value='hard'>Hard</Radio>
-                      </Stack>
-                    </RadioGroup>
-
-                  </Center>
-                  <Center>
-                    Please Choose the category
-
-                    <RadioGroup onChange={event => setCategory(event as any)}>
-                      <Stack direction='row'>
-                        <Radio value={'9'}>General Knowledge</Radio>
-                        <Radio value={'10'}>Books</Radio>
-                        <Radio value={'11'}>Film</Radio>
-                      </Stack>
-                    </RadioGroup>
-                  </Center>
-
+                  <OptionsCard
+                    handleDropdownChange={handleDropdownChange}
+                    setDifficulty={setDifficulty}
+                  />
                   <Button
+                    m={'30px'}
                     colorScheme="blue"
                     className="start"
                     onClick={startTrivia}
@@ -125,28 +112,30 @@ function App() {
                   </Button>
                 </>
               ) : null}
-              {!gameOver ? <p className="score">Score:{score}</p> : null}
-              {loading && <p>Loading Questions...</p>}
-              {!loading && !gameOver ? (
-                <QuestionCard
-                  questionNumber={number + 1}
-                  totalQuestions={TOTAL_QUESTIONS}
-                  question={questions[number].question}
-                  answer={questions[number].answers}
-                  userAnswer={userAnswers ? userAnswers[number] : undefined}
-                  callback={checkAnswer}
-                  isCorrect={isCorrect}
-                />
-              ) : null}
-              {!gameOver &&
-                !loading &&
-                userAnswers.length === number + 1 &&
-                number !== TOTAL_QUESTIONS - 1 ? (
-                <button className="next" onClick={nextQuestion}>
-                  Next Question
-                </button>
-              ) : null}
+              <Box marginBottom={'200px'}>
+                {!gameOver ? <p className="score">Score:{score}</p> : null}
+                {loading && <p>Loading Questions...</p>}
+                {!loading && !gameOver ? (
+                  <QuestionCard
+                    questionNumber={number + 1}
+                    totalQuestions={TOTAL_QUESTIONS}
+                    question={questions[number].question}
+                    answer={questions[number].answers}
+                    userAnswer={userAnswers ? userAnswers[number] : undefined}
+                    callback={checkAnswer}
+                    isCorrect={isCorrect}
+                  />
+                ) : null}
+                {!gameOver && !loading &&
+                  userAnswers.length === number + 1 &&
+                  number !== TOTAL_QUESTIONS - 1 ? (
+                  <button className="next" onClick={nextQuestion}>
+                    Next Question
+                  </button>
+                ) : null}
+              </Box>
             </div>
+
           </Grid>
         </Box>
       </ChakraProvider>
