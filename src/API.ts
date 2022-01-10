@@ -16,7 +16,6 @@ export const fetchQuestions = async (amount: number, difficulty: string, categor
     const APIendpoint = `https://opentdb.com/api.php?amount=${amount}&category=${category}&difficulty=${difficulty}&type=multiple`;
     const data = await (await fetch(APIendpoint)).json();
 
-    console.log(data)
 
     return data.results.map((question: Question) => (
         {

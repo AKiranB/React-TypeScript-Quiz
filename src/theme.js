@@ -1,13 +1,16 @@
 import { extendTheme } from '@chakra-ui/react'
 import { createBreakpoints } from '@chakra-ui/theme-tools'
 
-const fonts = { mono: `monospace` }
+const fonts = {
+    heading: 'Raleway',
+    body: 'Raleway',
+}
 
 const breakpoints = createBreakpoints({
-    sm: '40em',
-    md: '52em',
-    lg: '64em',
-    xl: '80em',
+    sm: '45em',
+    md: '55em',
+    lg: '65em',
+    xl: '75em',
 })
 
 const theme = extendTheme({

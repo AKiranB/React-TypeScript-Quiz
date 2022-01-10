@@ -1,23 +1,28 @@
 {
   "files": {
-    "main.css": "/React-TypeScript-Quiz/static/css/main.113a1f73.chunk.css",
-    "main.js": "/React-TypeScript-Quiz/static/js/main.db1fc743.chunk.js",
-    "main.js.map": "/React-TypeScript-Quiz/static/js/main.db1fc743.chunk.js.map",
-    "runtime-main.js": "/React-TypeScript-Quiz/static/js/runtime-main.54e03892.js",
-    "runtime-main.js.map": "/React-TypeScript-Quiz/static/js/runtime-main.54e03892.js.map",
-    "static/js/2.81a082ce.chunk.js": "/React-TypeScript-Quiz/static/js/2.81a082ce.chunk.js",
-    "static/js/2.81a082ce.chunk.js.map": "/React-TypeScript-Quiz/static/js/2.81a082ce.chunk.js.map",
-    "static/js/3.8d195fe5.chunk.js": "/React-TypeScript-Quiz/static/js/3.8d195fe5.chunk.js",
-    "static/js/3.8d195fe5.chunk.js.map": "/React-TypeScript-Quiz/static/js/3.8d195fe5.chunk.js.map",
+    "main.css": "/React-TypeScript-Quiz/static/css/main.c8dd415b.chunk.css",
+    "main.js": "/React-TypeScript-Quiz/static/js/main.0320d986.chunk.js",
+    "main.js.map": "/React-TypeScript-Quiz/static/js/main.0320d986.chunk.js.map",
+    "runtime-main.js": "/React-TypeScript-Quiz/static/js/runtime-main.4ce8190a.js",
+    "runtime-main.js.map": "/React-TypeScript-Quiz/static/js/runtime-main.4ce8190a.js.map",
+    "static/css/2.c720e053.chunk.css": "/React-TypeScript-Quiz/static/css/2.c720e053.chunk.css",
+    "static/js/2.b2b2f0f9.chunk.js": "/React-TypeScript-Quiz/static/js/2.b2b2f0f9.chunk.js",
+    "static/js/2.b2b2f0f9.chunk.js.map": "/React-TypeScript-Quiz/static/js/2.b2b2f0f9.chunk.js.map",
+    "static/js/3.4aacab87.chunk.js": "/React-TypeScript-Quiz/static/js/3.4aacab87.chunk.js",
+    "static/js/3.4aacab87.chunk.js.map": "/React-TypeScript-Quiz/static/js/3.4aacab87.chunk.js.map",
     "index.html": "/React-TypeScript-Quiz/index.html",
-    "static/css/main.113a1f73.chunk.css.map": "/React-TypeScript-Quiz/static/css/main.113a1f73.chunk.css.map",
-    "static/js/2.81a082ce.chunk.js.LICENSE.txt": "/React-TypeScript-Quiz/static/js/2.81a082ce.chunk.js.LICENSE.txt",
-    "static/media/quiz.e03f2b79.png": "/React-TypeScript-Quiz/static/media/quiz.e03f2b79.png"
+    "static/css/2.c720e053.chunk.css.map": "/React-TypeScript-Quiz/static/css/2.c720e053.chunk.css.map",
+    "static/css/main.c8dd415b.chunk.css.map": "/React-TypeScript-Quiz/static/css/main.c8dd415b.chunk.css.map",
+    "static/js/2.b2b2f0f9.chunk.js.LICENSE.txt": "/React-TypeScript-Quiz/static/js/2.b2b2f0f9.chunk.js.LICENSE.txt",
+    "static/media/700.css": "/React-TypeScript-Quiz/static/media/open-sans-vietnamese-700-normal.f7029b9d.woff2",
+    "static/media/quiz.e03f2b79.png": "/React-TypeScript-Quiz/static/media/quiz.e03f2b79.png",
+    "static/media/400.css": "/React-TypeScript-Quiz/static/media/raleway-vietnamese-400-normal.8efa7e0a.woff2"
   },
   "entrypoints": [
-    "static/js/runtime-main.54e03892.js",
-    "static/js/2.81a082ce.chunk.js",
-    "static/css/main.113a1f73.chunk.css",
-    "static/js/main.db1fc743.chunk.js"
+    "static/js/runtime-main.4ce8190a.js",
+    "static/css/2.c720e053.chunk.css",
+    "static/js/2.b2b2f0f9.chunk.js",
+    "static/css/main.c8dd415b.chunk.css",
+    "static/js/main.0320d986.chunk.js"
   ]
 }

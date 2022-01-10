@@ -4,13 +4,13 @@ import { fetchQuestions } from "./API";
 import QuestionCard from "./components/QuestionCard";
 import { QuestionState } from "./API";
 import {
-  ChakraProvider,
-  theme,
   Box,
   Grid,
   Button,
   Center,
-  Image
+  Image,
+  Badge,
+  Flex
 } from "@chakra-ui/react";
 import { ColorModeSwitcher } from "./ColorModeSwitcher";
 import logo from './images/quiz.png'
@@ -35,16 +35,12 @@ function App() {
   const [isCorrect, setIsCorrect] = useState<string>("blue");
   const [difficulty, setDifficulty] = useState<string>('')
   const [category, setCategory] = useState<string>('')
-
+  const [message, setMessage] = useState<string>('')
 
   const startTrivia = async () => {
     setLoading(true);
     setGameOver(false);
-
     const newQuestions = await fetchQuestions(TOTAL_QUESTIONS, difficulty, category);
-
-    console.log(await fetchQuestions(TOTAL_QUESTIONS, difficulty, category))
-
     setQuestions(newQuestions);
     setScore(0);
     setUserAnswers([]);
@@ -53,14 +49,21 @@ function App() {
   };
 
   const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {
+
     if (!gameOver) {
       const answer = e.currentTarget.value;
       const correct = questions[number].correct_answer === answer;
       if (correct) {
         setScore((prev) => prev + 1);
         setIsCorrect("green");
+        setMessage('Good Job!')
       } else {
         setIsCorrect("red");
+        setMessage(`sorry! the correct answer is "${questions[number].correct_answer}"`)
+      }
+      if (userAnswers.length === TOTAL_QUESTIONS - 1) {
+        console.log('hello')
+        setMessage(`You scored ${score} out of 10, good job!`)
       }
       const answerObject = {
         question: questions[number].question,
@@ -75,70 +78,92 @@ function App() {
   const nextQuestion = () => {
     const nextQ = number + 1;
     if (nextQ === TOTAL_QUESTIONS) {
-      setGameOver(true);
+      console.log('hello')
+      setMessage(`You scored ${score} out of 10, good job!`)
     } else {
       setIsCorrect("blue");
       setNumber(nextQ);
+      setMessage('')
     }
   };
 
   const handleDropdownChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setCategory(e.target.value)
+  };
+
+  const retry = () => {
+    setGameOver(true)
+    setMessage('')
   }
 
   return (
     <>
-      <ChakraProvider theme={theme}>
-        <Box textAlign="center" fontSize="xl">
-          <Grid dir="column" minH="100vh">
-            <ColorModeSwitcher justifySelf="flex-end" />
-            <Center>
-              <Image src={logo} />
-            </Center>
-            <div className="App">
-              {gameOver || userAnswers.length === TOTAL_QUESTIONS ? (
-                <>
-                  <OptionsCard
-                    handleDropdownChange={handleDropdownChange}
-                    setDifficulty={setDifficulty}
-                  />
-                  <Button
-                    m={'30px'}
-                    colorScheme="blue"
-                    className="start"
-                    onClick={startTrivia}
-                  >
-                    Start
-                  </Button>
-                </>
-              ) : null}
-              <Box marginBottom={'200px'}>
-                {!gameOver ? <p className="score">Score:{score}</p> : null}
-                {loading && <p>Loading Questions...</p>}
-                {!loading && !gameOver ? (
-                  <QuestionCard
-                    questionNumber={number + 1}
-                    totalQuestions={TOTAL_QUESTIONS}
-                    question={questions[number].question}
-                    answer={questions[number].answers}
-                    userAnswer={userAnswers ? userAnswers[number] : undefined}
-                    callback={checkAnswer}
-                    isCorrect={isCorrect}
-                  />
-                ) : null}
-                {!gameOver && !loading &&
-                  userAnswers.length === number + 1 &&
-                  number !== TOTAL_QUESTIONS - 1 ? (
-                  <button className="next" onClick={nextQuestion}>
-                    Next Question
-                  </button>
-                ) : null}
-              </Box>
-            </div>
+      <Box textAlign="center" fontSize="l">
+        <Grid dir="column" minH="100vh">
+          <ColorModeSwitcher justifySelf="flex-end" />
 
-          </Grid>
-        </Box>
-      </ChakraProvider>
+          <Image position={'fixed'} boxSize={['l']} src={logo} />
+
+          <div className="App">
+            {gameOver ? (
+              <>
+                <OptionsCard
+                  handleDropdownChange={handleDropdownChange}
+                  setDifficulty={setDifficulty}
+                />
+                <Button
+                  m={'30px'}
+                  colorScheme="blue"
+                  className="start"
+                  onClick={startTrivia}
+                >
+                  Start
+                </Button>
+              </>
+            ) : null}
+            <Flex flexDir={'column'} marginBottom={'20px'}>
+              {loading && <p>Loading Questions...</p>}
+              {!loading && !gameOver ? (
+                <QuestionCard
+                  questionNumber={number + 1}
+                  totalQuestions={TOTAL_QUESTIONS}
+                  question={questions[number].question}
+                  answer={questions[number].answers}
+                  userAnswer={userAnswers ? userAnswers[number] : undefined}
+                  callback={checkAnswer}
+                  isCorrect={isCorrect}
+                  score={score}
+                />
+              ) : null}
+
+              {!gameOver && !loading &&
+                userAnswers.length === number + 1 &&
+                number !== TOTAL_QUESTIONS - 1 ? (
+                <Center mt='15px'>
+                  <Button backgroundColor={'#1391ad'} width={'200px'} className="next" onClick={nextQuestion}>
+                    Next Question
+                  </Button>
+                </Center>
+
+              ) : null}
+              <Center>
+                <Badge borderRadius={'5px'} fontSize={'m'} m='20px' width={'auto'}>
+                  {message}
+                </Badge>
+              </Center>
+              {userAnswers.length === TOTAL_QUESTIONS && !gameOver ? (
+                <Center>
+                  <Button backgroundColor={'#1391ad'} width={'200px'} className="next" onClick={retry}>
+                    Retry
+                  </Button>
+                </Center>
+              ) : (
+                null
+              )}
+            </Flex>
+          </div>
+        </Grid>
+      </Box>
     </>
   );
 }
