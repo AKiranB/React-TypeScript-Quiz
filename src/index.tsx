@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import "./app.css";
+import "./App.css";
 import { ChakraProvider } from "@chakra-ui/react";
 import theme from "./theme";
 import "@fontsource/raleway/400.css";
