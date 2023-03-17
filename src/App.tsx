@@ -12,11 +12,12 @@ import {
   Badge,
   Flex,
 } from "@chakra-ui/react";
-import { ColorModeSwitcher } from "./ColorModeSwitcher";
+import { ColorModeSwitcher } from "./components/ColorModeSwitcher";
 import logo from "./images/quiz.png";
 import OptionsCard from "./components/OptionsCard";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
 import "./app.css";
+import { startTrivia } from "./utils/helpers";
 
 type AnswerObject = {
   question: string;
@@ -39,21 +40,6 @@ function App() {
   const [category, setCategory] = useState<string>("");
   const [message, setMessage] = useState<string>("");
   const nodeRef = React.useRef<HTMLDivElement>(null);
-
-  const startTrivia = async () => {
-    setLoading(true);
-    setGameOver(false);
-    const newQuestions = await fetchQuestions(
-      TOTAL_QUESTIONS,
-      difficulty,
-      category
-    );
-    setQuestions(newQuestions);
-    setScore(0);
-    setUserAnswers([]);
-    setNumber(0);
-    setLoading(false);
-  };
 
   const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!gameOver) {
