@@ -1,6 +1,5 @@
 import React, { ChangeEvent } from "react";
 import { useState } from "react";
-import { fetchQuestions } from "./API";
 import QuestionCard from "./components/QuestionCard";
 import { QuestionState } from "./API";
 import {
@@ -15,9 +14,11 @@ import {
 import { ColorModeSwitcher } from "./components/ColorModeSwitcher";
 import logo from "./images/quiz.png";
 import OptionsCard from "./components/OptionsCard";
-import { CSSTransition, SwitchTransition } from "react-transition-group";
 import "./app.css";
-import { startTrivia } from "./utils/helpers";
+import { startTrivia, checkAnswer } from "./utils/helpers";
+import SwitchTransitionWrapper from "./components/style/transitions/SwitchTransition";
+import TransitionWrapper from "./components/style/transitions/Transition";
+import { CSSTransition } from "react-transition-group";
 
 type AnswerObject = {
   question: string;
@@ -39,34 +40,11 @@ function App() {
   const [difficulty, setDifficulty] = useState<string>("");
   const [category, setCategory] = useState<string>("");
   const [message, setMessage] = useState<string>("");
+  const [showNext, setShowNext] = useState<boolean>(false);
   const nodeRef = React.useRef<HTMLDivElement>(null);
+  const buttonRef = React.useRef<HTMLButtonElement>(null);
 
-  const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {
-    if (!gameOver) {
-      const answer = e.currentTarget.value;
-      const correct = questions[number].correct_answer === answer;
-      if (correct) {
-        setScore((prev) => prev + 1);
-        setIsCorrect("green");
-        setMessage("Good Job!");
-      } else {
-        setIsCorrect("red");
-        setMessage(
-          `sorry! the correct answer is "${questions[number].correct_answer}"`
-        );
-      }
-      if (userAnswers.length === TOTAL_QUESTIONS - 1) {
-        setMessage(`You scored ${score} out of 10, good job!`);
-      }
-      const answerObject = {
-        question: questions[number].question,
-        answer,
-        correct,
-        correctAnswer: questions[number].correct_answer,
-      };
-      setUserAnswers((prev) => [...prev, answerObject]);
-    }
-  };
+  console.log(message);
 
   const nextQuestion = () => {
     const nextQ = number + 1;
@@ -74,12 +52,13 @@ function App() {
       setMessage(`You scored ${score} out of 10, good job!`);
     } else {
       setIsCorrect("blue");
-
       setNumber(nextQ);
       setMessage("");
     }
+    setShowNext(false);
   };
 
+  console.log(showNext);
   const handleDropdownChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setCategory(e.target.value);
   };
@@ -110,7 +89,17 @@ function App() {
                   m={"30px"}
                   colorScheme="blue"
                   className="start"
-                  onClick={startTrivia}
+                  onClick={startTrivia({
+                    setLoading,
+                    setQuestions,
+                    setGameOver,
+                    setNumber,
+                    setScore,
+                    setUserAnswers,
+                    difficulty,
+                    category,
+                    TOTAL_QUESTIONS,
+                  })}
                 >
                   Start
                 </Button>
@@ -120,43 +109,48 @@ function App() {
               {loading && <p>Loading Questions...</p>}
 
               {!loading && !gameOver ? (
-                <SwitchTransition mode="out-in">
-                  <CSSTransition<HTMLElement>
-                    key={number + 1}
-                    nodeRef={nodeRef}
-                    classNames="fade"
-                    addEndListener={(done: () => void): any => {
-                      nodeRef?.current?.addEventListener(
-                        "transitionend",
-                        done,
-                        false
-                      );
-                    }}
-                  >
-                    <div style={{ marginTop: "64px" }} ref={nodeRef}>
-                      <QuestionCard
-                        questionNumber={number + 1}
-                        totalQuestions={TOTAL_QUESTIONS}
-                        question={questions[number].question}
-                        answer={questions[number].answers}
-                        userAnswer={
-                          userAnswers ? userAnswers[number] : undefined
-                        }
-                        callback={checkAnswer}
-                        isCorrect={isCorrect}
-                        score={score}
-                      />
-                    </div>
-                  </CSSTransition>
-                </SwitchTransition>
+                <SwitchTransitionWrapper nodeRef={nodeRef} refKey={number + 1}>
+                  <QuestionCard
+                    questionNumber={number + 1}
+                    totalQuestions={TOTAL_QUESTIONS}
+                    question={questions[number].question}
+                    answer={questions[number].answers}
+                    userAnswer={userAnswers ? userAnswers[number] : undefined}
+                    callback={(e) =>
+                      checkAnswer({
+                        e,
+                        userAnswers,
+                        setUserAnswers,
+                        questions,
+                        number,
+                        setScore,
+                        setIsCorrect,
+                        score,
+                        TOTAL_QUESTIONS,
+                        gameOver,
+                        setMessage,
+                        setShowNext,
+                      })
+                    }
+                    isCorrect={isCorrect}
+                    score={score}
+                  />
+                </SwitchTransitionWrapper>
               ) : null}
 
               {!gameOver &&
               !loading &&
               userAnswers.length === number + 1 &&
               number !== TOTAL_QUESTIONS - 1 ? (
-                <Center mt="15px">
+                <CSSTransition
+                  in={showNext}
+                  nodeRef={buttonRef}
+                  timeout={300}
+                  classNames="button"
+                  unmountOnExit
+                >
                   <Button
+                    ref={buttonRef}
                     backgroundColor={"#1391ad"}
                     width={"200px"}
                     onClick={nextQuestion}
@@ -164,7 +158,7 @@ function App() {
                   >
                     Next Question
                   </Button>
-                </Center>
+                </CSSTransition>
               ) : null}
               <Center>
                 <Badge
