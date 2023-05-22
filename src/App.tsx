@@ -17,7 +17,8 @@ import OptionsCard from "./components/OptionsCard";
 import "./app.css";
 import { startTrivia, checkAnswer } from "./utils/helpers";
 import SwitchTransitionWrapper from "./components/style/transitions/SwitchTransition";
-import TransitionWrapper from "./components/style/transitions/Transition";
+import { colors } from "./theme";
+
 import { CSSTransition } from "react-transition-group";
 
 type AnswerObject = {
@@ -36,29 +37,26 @@ function App() {
   const [number, setNumber] = useState(0);
   const [userAnswers, setUserAnswers] = useState<AnswerObject[]>([]);
   const [gameOver, setGameOver] = useState(true);
-  const [isCorrect, setIsCorrect] = useState<string>("blue");
+  const [isCorrect, setIsCorrect] = useState<string>(colors.surface.blue);
   const [difficulty, setDifficulty] = useState<string>("");
   const [category, setCategory] = useState<string>("");
   const [message, setMessage] = useState<string>("");
   const [showNext, setShowNext] = useState<boolean>(false);
   const nodeRef = React.useRef<HTMLDivElement>(null);
-  const buttonRef = React.useRef<HTMLButtonElement>(null);
-
-  console.log(message);
+  const buttonRef = React.useRef<HTMLDivElement>(null);
 
   const nextQuestion = () => {
     const nextQ = number + 1;
     if (nextQ === TOTAL_QUESTIONS) {
       setMessage(`You scored ${score} out of 10, good job!`);
     } else {
-      setIsCorrect("blue");
+      setIsCorrect(colors.surface.blue);
       setNumber(nextQ);
       setMessage("");
     }
     setShowNext(false);
   };
 
-  console.log(showNext);
   const handleDropdownChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setCategory(e.target.value);
   };
@@ -79,35 +77,46 @@ function App() {
               right="16px"
               sx={{ position: "absolute" }}
             />
-            {gameOver ? (
-              <>
-                <OptionsCard
-                  handleDropdownChange={handleDropdownChange}
-                  setDifficulty={setDifficulty}
-                />
-                <Button
-                  m={"30px"}
-                  colorScheme="blue"
-                  className="start"
-                  onClick={startTrivia({
-                    setLoading,
-                    setQuestions,
-                    setGameOver,
-                    setNumber,
-                    setScore,
-                    setUserAnswers,
-                    difficulty,
-                    category,
-                    TOTAL_QUESTIONS,
-                  })}
-                >
-                  Start
-                </Button>
-              </>
-            ) : null}
+            {gameOver && (
+              <Box
+                sx={{
+                  minHeight: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  paddingBottom: "120px",
+                }}
+              >
+                <>
+                  <OptionsCard
+                    handleDropdownChange={handleDropdownChange}
+                    setDifficulty={setDifficulty}
+                  />
+                  <Button
+                    m={"30px"}
+                    maxWidth={"200px"}
+                    colorScheme="blue"
+                    className="start"
+                    onClick={startTrivia({
+                      setLoading,
+                      setQuestions,
+                      setGameOver,
+                      setNumber,
+                      setScore,
+                      setUserAnswers,
+                      difficulty,
+                      category,
+                      TOTAL_QUESTIONS,
+                    })}
+                  >
+                    Start
+                  </Button>
+                </>
+              </Box>
+            )}
             <Flex flexDir={"column"} marginBottom={"20px"}>
               {loading && <p>Loading Questions...</p>}
-
               {!loading && !gameOver ? (
                 <SwitchTransitionWrapper nodeRef={nodeRef} refKey={number + 1}>
                   <QuestionCard
@@ -144,20 +153,23 @@ function App() {
               number !== TOTAL_QUESTIONS - 1 ? (
                 <CSSTransition
                   in={showNext}
+                  out={showNext}
+                  key={number + 1}
                   nodeRef={buttonRef}
-                  timeout={300}
-                  classNames="button"
-                  unmountOnExit
+                  timeout={5000}
+                  classNames="fade"
                 >
-                  <Button
-                    ref={buttonRef}
-                    backgroundColor={"#1391ad"}
-                    width={"200px"}
-                    onClick={nextQuestion}
-                    className="btn"
-                  >
-                    Next Question
-                  </Button>
+                  <Center key={number + 1} ref={buttonRef}>
+                    <Button
+                      backgroundColor={"#1391ad"}
+                      width={"200px"}
+                      onClick={nextQuestion}
+                      className="fade"
+                      mt={"32px"}
+                    >
+                      Next Question
+                    </Button>
+                  </Center>
                 </CSSTransition>
               ) : null}
               <Center>

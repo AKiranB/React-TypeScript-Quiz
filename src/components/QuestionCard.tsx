@@ -51,6 +51,7 @@ const QuestionCard: React.FC<Props> = ({
               width={["sm", "md", "lg"]}
               fontSize={["sm", "md", "lg"]}
               colorScheme={isCorrect}
+              backgroundColor={isCorrect}
               disabled={userAnswer}
               value={answer}
               onClick={callback}
