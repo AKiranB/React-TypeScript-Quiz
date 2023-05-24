@@ -7,8 +7,8 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { ChangeEvent } from "react";
-import apiCategories from "../constants/apiCategories";
-import Container from "./style/container";
+import apiCategories from "../../constants/apiCategories";
+import Container from "../style/container";
 type Props = {
   setDifficulty: (e: string) => void;
   handleDropdownChange: (e: ChangeEvent<HTMLSelectElement>) => void;

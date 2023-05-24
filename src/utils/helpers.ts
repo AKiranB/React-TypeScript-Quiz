@@ -1,6 +1,5 @@
-import { fetchQuestions, QuestionState } from "API";
+import { fetchQuestions, QuestionState } from "utils/API";
 import { AnswerObject } from "types/types";
-import { colors } from "theme";
 
 type StartTriviaProps = {
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -20,7 +19,7 @@ type CheckAnswerProps = {
   number: number;
   gameOver: boolean;
   setScore: React.Dispatch<React.SetStateAction<number>>;
-  setIsCorrect: React.Dispatch<React.SetStateAction<string>>;
+  setIsCorrect: React.Dispatch<React.SetStateAction<boolean | null>>;
   setMessage: React.Dispatch<React.SetStateAction<string>>;
   setUserAnswers: React.Dispatch<React.SetStateAction<AnswerObject[]>>;
   setShowNext: React.Dispatch<React.SetStateAction<boolean>>;
@@ -76,10 +75,10 @@ const checkAnswer = ({
     setShowNext(true);
     if (correct) {
       setScore((prev) => prev + 1);
-      setIsCorrect(colors.primary.main);
+      setIsCorrect(true);
       setMessage("Good Job!");
     } else {
-      setIsCorrect(colors.error);
+      setIsCorrect(false);
       setMessage(`The correct answer is "${questions[number].correct_answer}"`);
     }
     if (userAnswers.length === TOTAL_QUESTIONS - 1) {

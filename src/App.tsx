@@ -1,7 +1,7 @@
 import React, { ChangeEvent } from "react";
 import { useState } from "react";
-import QuestionCard from "./components/QuestionCard";
-import { QuestionState } from "./API";
+import QuestionCard from "./components/questionCard";
+import { QuestionState } from "./utils/API";
 import {
   Box,
   Grid,
@@ -11,13 +11,12 @@ import {
   Badge,
   Flex,
 } from "@chakra-ui/react";
-import { ColorModeSwitcher } from "./components/ColorModeSwitcher";
+import { ColorModeSwitcher } from "./components/colorModeSwitcher";
 import logo from "./images/quiz.png";
-import OptionsCard from "./components/OptionsCard";
+import OptionsCard from "./components/optionsCard";
 import "./app.css";
 import { startTrivia, checkAnswer } from "./utils/helpers";
 import SwitchTransitionWrapper from "./components/style/transitions/SwitchTransition";
-import { colors } from "./theme";
 
 import { CSSTransition } from "react-transition-group";
 
@@ -37,7 +36,7 @@ function App() {
   const [number, setNumber] = useState(0);
   const [userAnswers, setUserAnswers] = useState<AnswerObject[]>([]);
   const [gameOver, setGameOver] = useState(true);
-  const [isCorrect, setIsCorrect] = useState<string>(colors.surface.blue);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [difficulty, setDifficulty] = useState<string>("");
   const [category, setCategory] = useState<string>("");
   const [message, setMessage] = useState<string>("");
@@ -50,7 +49,7 @@ function App() {
     if (nextQ === TOTAL_QUESTIONS) {
       setMessage(`You scored ${score} out of 10, good job!`);
     } else {
-      setIsCorrect(colors.surface.blue);
+      setIsCorrect(null);
       setNumber(nextQ);
       setMessage("");
     }
@@ -125,6 +124,7 @@ function App() {
                     question={questions[number].question}
                     answer={questions[number].answers}
                     userAnswer={userAnswers ? userAnswers[number] : undefined}
+                    currentQuestion={questions[number]}
                     callback={(e) =>
                       checkAnswer({
                         e,
@@ -177,7 +177,7 @@ function App() {
                   borderRadius={"5px"}
                   fontSize={"m"}
                   m="20px"
-                  sx={{ color: isCorrect, backgroundColor: "transparent" }}
+                  sx={{ backgroundColor: "transparent" }}
                   width={"auto"}
                 >
                   {message}

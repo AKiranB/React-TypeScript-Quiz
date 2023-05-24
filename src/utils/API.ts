@@ -1,4 +1,4 @@
-import { shuffleArray } from "./components/utility/shuffleArray";
+import { shuffleArray } from "../components/utility/shuffleArray";
 export type Question = {
   category: string;
   correct_answer: string;
